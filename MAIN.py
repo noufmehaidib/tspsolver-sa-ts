@@ -12,7 +12,7 @@ import SA
 import TS
 import os
 
-class main:
+class MAIN:
     
         # make directoy for the result, if not found
         if not os.path.exists('results'):
