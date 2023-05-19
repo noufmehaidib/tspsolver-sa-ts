@@ -13,13 +13,13 @@ import TS
 import os
 
 class MAIN:
-    
+
         # make directoy for the result, if not found
         if not os.path.exists('results'):
             os.makedirs('results')
 
-        # load tsp_38 file 
-        pos = [[float(x) for x in s.split()[1:]] for s in open('data/tsp_38.txt').readlines()]
+        # load tsp_38 file
+        pos = [[float(x) for x in s.split()[1:]] for s in open('/tsp_38.txt').readlines()]
         n = len(pos)
 
         # calculate adjacency matrix
@@ -28,12 +28,12 @@ class MAIN:
             for j in range(i, n):
                 adj_mat[i][j] = adj_mat[j][i] = np.linalg.norm(np.subtract(pos[i], pos[j]))
 
-        # initialization 
+        # initialization
         opt_cost = 6659.439330623091  # got the result from tsp_gurobi.py
-        num_tests = 100  
+        num_tests = 100
         result = {'best_sol': [], 'best_cost': math.inf, 'best_gap': math.inf,
                   'cost': [0] * num_tests, 'time': [0] * num_tests,
-                  'avg_cost': math.inf, 'avg_time': math.inf,'avg_gap': math.inf, 
+                  'avg_cost': math.inf, 'avg_time': math.inf,'avg_gap': math.inf,
                   'min_cost': math.inf, 'min_time': math.inf,'min_gap': math.inf,
                   'max_cost': math.inf, 'max_time': math.inf,'max_gap': math.inf }
 
@@ -41,12 +41,12 @@ class MAIN:
         best_sol = []
         data = {}
 
-        # welcome message 
+        # welcome message
         print("####WELCOME TO TSP SOLVER####")
 
         # set both algorithm and operator method
-        algorithm = ''
-        operator == ''
+        algorithm = '1'
+        operator = '2'
 
         while algorithm != '3' or operator != '3':
             # choice of algorithm
@@ -60,9 +60,9 @@ class MAIN:
             # Swap
             if operator == '1':
                ngh_strc = [get_new_sol_swap, get_delta_swap]
-            # 2-opt   
+            # 2-opt
             elif operator == '2':
-                ngh_strc = [get_new_sol_2opt, get_delta_2opt]
+                ngh_strc = [twoOpt_Solution, delta_twoOpt]
             # not a valid choice (run the application again to start)
             else:
                 break
@@ -75,15 +75,22 @@ class MAIN:
                 if algorithm == '1':
                    algorithm_name = 'Simulated Anealing'
                    #the initial temperature and the reduction factor are randomly generated
-                   best_sol, best_cost, data = simulatedAnnealing.sa(n=n,adj_mat=adj_mat, tb_size = 0, max_tnm=20,ngh_strc=ngh_strc,term_flag_1=25,term_flag_2=25,t_0=random.radiant(100,1000),alpha=random.random()) 
+                   best_sol, best_cost, data = simulatedAnnealing.sa(n=n,adj_mat=adj_mat, tb_size = 0, max_tnm=20,ngh_strc=ngh_strc,term_flag_1=25,term_flag_2=25,t_0=random.radiant(100,1000),alpha=random.random(),tabu_tenure=500)
 
                 # TS Algorithm
                 elif algorithm == '2':
                     algorithm_name = 'Tabu Search'
+                    best_sol, best_cost, data = ts(n, adj_mat=adj_mat,
+                                          tb_size=20,  # tabu solutions in tb_list
+                                          max_tnm=80,  # how many candidates picked in tournament selection
+                                          tabu_tenure=500,
+                                          nght_stc=ngh_strc,  # [get_sol, get delta], method of mutation, e.g. swap, 2-opt
+                                          term_count=150  # terminate threshold if best_cost nor change
+                                          )
 
                 # not a valid choice (run the application again to start)
                 else:
-                    break 
+                    break
 
                 #end time
                 end = time.time()

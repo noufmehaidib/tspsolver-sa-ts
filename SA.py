@@ -1,19 +1,20 @@
 #imports required libraries
 
 from collections import deque
-from TS import tnm_selection
-from TSP import cost
+# from TS import tnm_selection
+from TSP import *
 import random
 import math
 
 class SA:
 
-        def sa(no_v, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
+        def sa(no_v, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha,tabu_tenure):
 
             """
             no_v: number of vertices
             adj_mat: adjacency matrix
             tb_size: max length of tb_list, here in sa it is always zero
+            tabu_tenure: The duration the solution kept on the tabu list, here in sa it will not be used
             max_tnm: candidates picked in tournament selection
             nght_stc: neighborhood structure (swap or 2-opt)
             term_flag_1: termination flag (inner loop)
@@ -22,13 +23,13 @@ class SA:
             alpha: reduction factor for cooling
             """
 
-            # initialization  
-            sol = list(range(n)) #get a permutation 
+            # initialization
+            sol = list(range(n)) #get a permutation
             random.shuffle(sol)  # e.g. [0,1,...,n]
-            cost = get_cost(n, adj_mat, sol) 
+            cost = cost(n, adj_mat, sol)
             best_sol = sol.copy()
             best_cost = cost
-            tb_list = deque([]) #empty (not used)
+            tb_list = deque() #empty (not used)
             fq_dict = {}  #empty (not used)
             t = t_0
             result = {'cost': deque([]), 'best_cost': deque([]),
@@ -50,11 +51,11 @@ class SA:
                     last_cost = cost
 
                     #get a neighboring solution
-                    sol, cost, tb_list, fq_dict = tnm_selection(n, adj_mat, sol,
+                    sol, cost, tb_list, fq_dict = TSP.tnm_selection(n, adj_mat, sol,
                                                             max_tnm, ngh_strc, tb_size,
-                                                            tb_list, fq_dict, best_cost)
+                                                            tb_list, fq_dict, best_cost,tabu_tenure)
 
-                    # update the solution 
+                    # update the solution
                     # (1) if the new solution is worse (it can be accepted with a random propability)
                     if cost > last_cost and math.exp((last_cost - cost) / t) < random.random(): #random float number [0,1]
                         sol = last_sol
@@ -78,7 +79,7 @@ class SA:
                     # end of inner loop
 
                 # update the temperature i.e. reduce it
-                t = alpha * t 
+                t = alpha * t
 
                 # get best_inner_sol < sol
                 if best_inner_cost < best_cost:
