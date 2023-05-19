@@ -6,13 +6,13 @@ Term project of Selected Topics in Computer Science, King Saud Universty Course.
 The tsp solver has 4 classes: 
 
 
-         -----------> main.py:
+         -----------> MAIN.py:
                       where the program starts.
-         -----------> simulatedAnnealing.py:
+         -----------> SA.py:
                       detailed implementation of the SA algorithm
-         -----------> tabuSearch.py:
+         -----------> TS.py:
                       detailed implementation of the TS algorithm.
-         -----------> TravelingSalesManProblem.py:
+         -----------> TSP.py:
                       detailed implementation of the TSP.
 
 The tsp solver has 2 folders:
