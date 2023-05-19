@@ -106,6 +106,3 @@ while algorithm != '3' or operator != '3':
         result['min_time'] = np.min(result['time'])
 
         pprint(result)
-
-
-
