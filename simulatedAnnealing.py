@@ -92,10 +92,3 @@ def sa(n, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, al
     
     result['fq_dict'] = fq_dict
     return best_sol, best_cost, result
-
-
-
-
-            
-
-    
