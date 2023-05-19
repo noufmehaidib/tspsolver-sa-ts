@@ -3,21 +3,21 @@ import math
 from collections import deque
 #from tsp import get_cost
 
-def tnm_selection(no_v, adj_mat, sol, max_tnm, mut_md, tb_size, tb_list, fq_dict, best_cost):
+def tnm_selection(no_v, adj_mat, sol, max_tnm, nght_stc, tb_size, tb_list, fq_dict, best_cost):
     """
     :param no_v: number of vertices
     :param adj_mat: adjacency matrix
     :param sol: solution where the neighbours are chosen from
     :param max_tnm: how many candidates picked in tournament selection
-    :param mut_md: [get_sol, get delta], method of mutation, e.g. swap, 2-opt
+    :param nght_stc: [get_sol, get delta], method of mutation, e.g. swap, 2-opt
     :param tb_size: >=0, max length of tb_list
     :param tb_list: deque ,out <- [...] <- in
     :param fq_dict: visit times of vertex pair (not used!)
     :param best_cost: cost of the best solution
     """
 
-    get_new_sol = mut_md[0]
-    get_delta = mut_md[1]
+    get_new_sol = nght_stc[0]
+    get_delta = nght_stc[1]
 
     cost = get_cost(no_v, adj_mat, sol)
 
@@ -64,15 +64,15 @@ def tnm_selection(no_v, adj_mat, sol, max_tnm, mut_md, tb_size, tb_list, fq_dict
     return new_sol, new_cost, tb_list, fq_dict
 
 
-def ts(no_v, adj_mat, tb_size, max_tnm, mut_md, term_count):
+def ts(no_v, adj_mat, tb_size, max_tnm, nght_stc, term_count):
 
     """
-    :param no_v: number of vertices
-    :param adj_mat: adjacency matrix
-    :param tb_size: tabu solutions in tb_list
-    :param max_tnm: how many candidates picked in tournament selection
-    :param mut_md: [get_sol, get delta], method of mutation, e.g. swap, 2-opt
-    :param term_count: termination flag
+    no_v:       number of vertices
+    adj_mat:    adjacency matrix
+    tb_size:    tabu solutions in tb_list
+    max_tnm:    how many candidates picked in tournament selection
+    nght_stc:   neighborhood structure (swap or 2-opt)
+    term_count: termination flag
     """
     # initialization
     sol = list(range(no_v))
@@ -87,7 +87,7 @@ def ts(no_v, adj_mat, tb_size, max_tnm, mut_md, term_count):
     ###
     while True:
         sol, cost, tb_list, fq_dict = tnm_selection(no_v, adj_mat, sol,
-                                                    max_tnm, mut_md, tb_size,
+                                                    max_tnm, nght_stc, tb_size,
                                                     tb_list, fq_dict, best_cost)
         # mention the iteratively variable 'sol'
         if cost < best_cost:
