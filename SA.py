@@ -8,14 +8,14 @@ import math
 
 class SA:
 
-    def sa(n, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
+    def sa(no_v, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
     
         """
-        n: number of vertices
+        no_v: number of vertices
         adj_mat: adjacency matrix
         tb_size: max length of tb_list, here in sa it is always zero
         max_tnm: candidates picked in tournament selection
-        nght_stc: neighborhood structure
+        nght_stc: neighborhood structure (swap or 2-opt)
         term_flag_1: termination flag (inner loop)
         term_flag_2: termination flag (outer loop)
         t_0: initial temperature
