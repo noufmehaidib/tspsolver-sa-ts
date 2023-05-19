@@ -28,11 +28,12 @@ for i in range(n):
 # initialization 
 opt_cost = 6659.439330623091  # got the result from tsp_gurobi.py
 num_tests = 100  
-result = {'best_sol': [], 'best_cost': math.inf,
+result = {'best_sol': [], 'best_cost': math.inf, 'best_gap': math.inf,
           'cost': [0] * num_tests, 'time': [0] * num_tests,
-          'avg_cost': math.inf, 'avg_time': math.inf, 
-          'min_cost': math.inf, 'min_time': math.inf, 
-          'max_cost': math.inf, 'max_time': math.inf     }
+          'avg_cost': math.inf, 'avg_time': math.inf,'avg_gap': math.inf, 
+          'min_cost': math.inf, 'min_time': math.inf,'min_gap': math.inf,
+          'max_cost': math.inf, 'max_time': math.inf,'max_gap': math.inf }
+
 best_cost = math.inf
 best_sol = []
 data = {}
@@ -88,6 +89,7 @@ while algorithm != '3' or operator != '3':
         if best_cost < result['best_cost']:
            result['best_sol'] = best_sol
            result['best_cost'] = best_cost
+           result['best_gap'] = best_cost / opt_cost - 1
 
         # save figure in results dir
         plt.plot(range(len(data['cost'])), data['cost'], color='b', alpha=math.pow(num_tests, -0.75))
@@ -98,11 +100,17 @@ while algorithm != '3' or operator != '3':
         plt.savefig('results/{}.png'.format(algorithm))
 
         # print results
+        #avg
         result['avg_cost'] = np.mean(result['cost'])
         result['avg_time'] = np.mean(result['time'])
+        result['avg_gap'] = result['avg_cost'] / opt_cost - 1
+        #max
         result['max_cost'] = np.max(result['cost'])
         result['max_time'] = np.max(result['time'])
+        result['max_gap'] = result['max_cost'] / opt_cost - 1
+        #min
         result['min_cost'] = np.min(result['cost'])
         result['min_time'] = np.min(result['time'])
+        result['min_gap'] = result['min_cost'] / opt_cost - 1
 
         pprint(result)
