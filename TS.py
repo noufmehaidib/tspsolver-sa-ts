@@ -26,7 +26,7 @@ def ts(no_v, adj_mat, tb_size, max_tnm, nght_stc, term_count,tabu_tenure):
 
     ###
     while True:
-        sol, cost, tb_list, fq_dict = tnm_selection(no_v, adj_mat, sol,
+        sol, cost, tb_list, fq_dict = TSP.tnm_selection(no_v, adj_mat, sol,
                                                     max_tnm, nght_stc, tb_size,
                                                     tb_list, fq_dict, best_cost,tabu_tenure)
         # mention the iteratively variable 'sol'

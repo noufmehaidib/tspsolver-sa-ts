@@ -24,9 +24,9 @@ class SA:
             """
 
             # initialization
-            sol = list(range(n)) #get a permutation
+            sol = list(range(no_v)) #get a permutation
             random.shuffle(sol)  # e.g. [0,1,...,n]
-            cost = cost(n, adj_mat, sol)
+            cost = cost(no_v, adj_mat, sol)
             best_sol = sol.copy()
             best_cost = cost
             tb_list = deque() #empty (not used)
@@ -51,7 +51,7 @@ class SA:
                     last_cost = cost
 
                     #get a neighboring solution
-                    sol, cost, tb_list, fq_dict = TSP.tnm_selection(n, adj_mat, sol,
+                    sol, cost, tb_list, fq_dict = TSP.tnm_selection(no_v, adj_mat, sol,
                                                             max_tnm, ngh_strc, tb_size,
                                                             tb_list, fq_dict, best_cost,tabu_tenure)
 
