@@ -62,10 +62,10 @@ class TSP:
       for _ in range(max_tnm):
           i, j = random.sample(range(no_v), 2)  # randomly select two indexes
           i, j = (i, j) if i < j else (j, i)  # let i < j
-          v_1, v_2 = (sol[i], sol[j]) if sol[i] < sol[j] else (
+          vert_1, vert_2 = (sol[i], sol[j]) if sol[i] < sol[j] else (
               sol[j], sol[i])  
           delta = get_delta(no_v, adj_mat, sol, i, j)
-          if (v_1, v_2) not in tb_list:  # if the sol is not tabu
+          if (vert_1, vert_2) not in tb_list:  # if the sol is not tabu
               if delta < best_delta_0:
                   best_delta_0 = delta
                   best_i_0 = i
@@ -76,21 +76,21 @@ class TSP:
                   best_i_1 = i
                   best_j_1 = j
       if best_delta_1 < best_delta_0 and cost + best_delta_1 < best_cost:  # break the tabu
-          v_1, v_2 = (sol[best_i_1], sol[best_j_1]) if sol[best_i_1] < sol[best_j_1] else (sol[best_j_1], sol[best_i_1])
-          tb_list.remove((v_1, v_2))
-          tb_list.append((v_1, v_2))  # move to the end of list
+          vert_1, vert_2 = (sol[best_i_1], sol[best_j_1]) if sol[best_i_1] < sol[best_j_1] else (sol[best_j_1], sol[best_i_1])
+          tb_list.remove((vert_1, vert_2))
+          tb_list.append((vert_1, vert_2))  # move to the end of list
           
           new_sol = get_new_sol(sol, best_i_1, best_j_1)
           new_cost = cost + best_delta_1
       else:   # do not break the tabu
           if tb_size > 0: 
              if sol[best_i_0] < sol[best_j_0]:
-                v_1, v_2 = (sol[best_i_0], sol[best_j_0]) 
+                vert_1, vert_2 = (sol[best_i_0], sol[best_j_0]) 
              else:
-              v_1, v_2 = (sol[best_j_0], sol[best_i_0])
+              vert_1, vert_2 = (sol[best_j_0], sol[best_i_0])
               if len(tb_list) == tb_size: # a move in the tabu list removed if exceed tabu_tenure
                   tb_list.popleft()       
-              tb_list.append((v_1, v_2))
+              tb_list.append((vert_1, vert_2))
         
           new_sol = get_new_sol(sol, best_i_0, best_j_0)
           new_cost = cost + best_delta_0
