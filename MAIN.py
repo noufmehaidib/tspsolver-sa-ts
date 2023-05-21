@@ -18,7 +18,7 @@ class MAIN:
         if not os.path.exists('results'):
             os.makedirs('results')
 
-        # load tsp_38 file
+        # load tsp_38 file 
         # pos = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
         # n = len(pos)
 
