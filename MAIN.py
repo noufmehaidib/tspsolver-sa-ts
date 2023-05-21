@@ -76,10 +76,13 @@ class MAIN:
         # not a valid choice (run the application again to start)
         else:
             exit
-        
+
+        #start time
+        start = time.time()
+
         for _ in tqdm(range(num_tests)):
-            #start time
-            start = time.time()
+            
+            
             # SA Algorithm
             if algorithm == '1':
                 algorithm_name = 'Simulated Anealing'
