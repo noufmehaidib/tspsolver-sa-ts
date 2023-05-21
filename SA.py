@@ -30,7 +30,7 @@ class SA:
             best_sol = sol.copy()
             best_cost = cost
             tb_list = deque([]) #empty (not used)
-            fq_dict = {}  #empty (not used)
+            
             t = t_0
             result = {'cost': deque([]), 'best_cost': deque([]),
                 'sol': deque([]), 'best_sol': deque([])}
@@ -90,5 +90,5 @@ class SA:
                 if count_2 > term_flag_2:
                    break
 
-                result['fq_dict'] = fq_dict
+                
                 return best_sol, best_cost, result
