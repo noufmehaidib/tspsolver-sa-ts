@@ -1,21 +1,21 @@
 #imports required libraries
 
 from collections import deque
-from TS import *
 from TSP import *
+from TS import *
 import random
 import math
 
 class SA:
 
-        def sa(no_v, adjacency_matrix, tabu_lst_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
+        def sa(no_v, adjacency_matrix, tabu_lst_size, max_no_tournmnt, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
 
             """
             no_v: number of vertices
             adjacency_matrix: adjacency matrix
             tabu_lst_size: max length of tabu_lst, here in sa it is always zero
             tabu_tenure: The duration the solution kept on the tabu list, here in sa it will not be used
-            max_tnm: candidates picked in tournament selection
+            max_no_tournmnt: candidates picked in tournament selection
             nght_stc: neighborhood structure (swap or 2-opt)
             term_flag_1: termination flag (inner loop)
             term_flag_2: termination flag (outer loop)
@@ -30,7 +30,6 @@ class SA:
             best_sol = sol.copy()
             best_cost = cost
             tabu_lst = deque([]) #empty (not used)
-            fq_dict = {}  #empty (not used)
             t = t_0
             result = {'cost': deque([]), 'best_cost': deque([]),
                 'sol': deque([]), 'best_sol': deque([])}
@@ -49,7 +48,7 @@ class SA:
 
                     #get a neighboring solution
                     sol, cost, tabu_lst = TSP.tnm_selection(no_v, adjacency_matrix, sol,
-                                                    max_tnm, ngh_strc, tabu_lst_size,
+                                                    max_no_tournmnt, ngh_strc, tabu_lst_size,
                                                     tabu_lst, best_cost)
 
                     # update the solution
@@ -82,12 +81,12 @@ class SA:
                 if best_inner_cost < best_cost:
                     best_sol = best_inner_sol
                     best_cost = best_inner_cost
-                    count_2 = 0 # count back zero since a better solution is found
+                    count_outer = 0 # count back zero since a better solution is found
                 else:
-                    count_2 += 1
+                    count_outer += 1
 
                 # check number of iteration
-                if count_2 > term_flag_2:
+                if count_outer > term_flag_2:
                    break
 
                 

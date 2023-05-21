@@ -1,6 +1,4 @@
 #imports required libraries
-
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 import numpy as np
 from TSP import *
@@ -9,7 +7,6 @@ from TS import *
 import random
 import time
 import math
-import os
 
 #This class is responsible for starting the program
 
@@ -23,8 +20,8 @@ class MAIN:
         no_v = len(file_distance)
 
         # load qa194 file
-        #file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
-        #no_v = len(file_distance)
+        # file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
+        # no_v = len(file_distance)
 
         # calculate adjacency matrix
         adjacency_matrix = np.zeros([no_v, no_v]) #initialize all values to zero1es
@@ -65,7 +62,7 @@ class MAIN:
         print("####PLEASE CHOOSE WHICH NEIGHBORHOOD STRUCTURE YOU WOULD LIKE TO USE####")
         operator = input("#### 1: SWAP, 2: 2-OPT ####")
 
-        # Swap
+        # swap
         if operator == '1':
             ngh_strc = [TSP.swap_Solution, TSP.delta_Swap]
         # 2-opt
@@ -82,18 +79,18 @@ class MAIN:
             # SA Algorithm
             if algorithm == '1':
                 algorithm_name = 'Simulated Anealing'
-                best_sol, best_cost, data = SA.sa(no_v,adjacency_matrix,tabu_lst_size = 0,max_tnm=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=1000,t_0=t_0,alpha=alpha)
+                best_sol, best_cost, data = SA.sa(no_v,adjacency_matrix,tabu_lst_size=0,max_no_tournmnt=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=1000,t_0=t_0,alpha=alpha)
 
             # TS Algorithm
             elif algorithm == '2':
                  algorithm_name = 'Tabu Search'
-                 best_sol, best_cost, data = TS.ts(no_v,adjacency_matrix,tabu_lst_size=25,max_tnm=100,ngh_strc=ngh_strc, term_count=1000)
+                 best_sol, best_cost, data = TS.ts(no_v,adjacency_matrix,tabu_lst_size=25,max_no_tournmnt=100,ngh_strc=ngh_strc, term_flag=1000)
 
             # not a valid choice (run the application again to start)
             else:
                 exit
 
-            #end time
+            #end serach time
             end = time.time()
             result['time'][_] = end - start
             result['cost'][_] = best_cost
@@ -103,7 +100,7 @@ class MAIN:
                 result['best_gap'] = best_cost / opt_cost - 1
 
         # update results
-        #avg
+        # avg
         result['avg_cost'] = np.mean(result['cost'])
         result['avg_time'] = np.mean(result['time'])
             
@@ -111,7 +108,7 @@ class MAIN:
         result['max_cost'] = np.max(result['cost'])
         result['max_time'] = np.max(result['time'])
             
-        #min
+        # min
         result['min_cost'] = np.min(result['cost'])
         result['min_time'] = np.min(result['time'])
             

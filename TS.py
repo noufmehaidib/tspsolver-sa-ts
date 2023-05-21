@@ -1,19 +1,19 @@
-import random
-import math
 from collections import deque
 from TSP import *
+import random
+
 
 class TS:
     
-        def ts(no_v, adjacency_matrix, tabu_lst_size, max_tnm, ngh_strc, term_count):
+        def ts(no_v, adjacency_matrix, tabu_lst_size, max_no_tournmnt, ngh_strc, term_flag):
 
             """
             no_v:       number of vertices
             adjacency_matrix:    adjacency matrix
-            tabu_lst_size:    tabu solutions in tabu_lst
-            max_tnm:    how many candidates picked in tournament selection
+            tabu_lst_size:    number of tabu solutions in tabu_lst
+            max_no_tournmnt:    number of candidates picked in tournament selection (neighbors to evalute)
             ngh_strc:   neighborhood structure (swap or 2-opt)
-            term_count: termination flag
+            term_flag: termination flag
             """
             # initialization
             sol = list(range(no_v))
@@ -29,7 +29,7 @@ class TS:
             while True:
 
                 sol, cost, tabu_lst = TSP.tnm_selection(no_v, adjacency_matrix, sol,
-                                                            max_tnm, ngh_strc, tabu_lst_size,
+                                                            max_no_tournmnt, ngh_strc, tabu_lst_size,
                                                             tabu_lst, best_cost)
                 # mention the iteratively variable 'sol'
                 if cost < best_cost:
@@ -40,7 +40,7 @@ class TS:
                     count += 1
                 result['cost'].append(cost)
                 result['best_cost'].append(best_cost)
-                if count > term_count:
+                if count > term_flag:
                     break
             return best_sol, best_cost, result
 

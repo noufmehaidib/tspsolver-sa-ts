@@ -1,6 +1,6 @@
+from TSP import *
 import random
 import math
-from collections import deque
 
 class TSP:
 
@@ -36,12 +36,12 @@ class TSP:
         delta = 0
      return delta
 
-    def tnm_selection(no_v, adj_mat, sol, max_tnm, nght_stc, tabu_lst_size, tabu_lst, best_cost):
+    def tnm_selection(no_v, adj_mat, sol, max_no_tournmnt, nght_stc, tabu_lst_size, tabu_lst, best_cost):
       """
       :param no_v: number of vertices
       :param adj_mat: adjacency matrix
       :param sol: solution where the neighbours are chosen from
-      :param max_tnm: how many candidates picked in tournament selection
+      :param max_no_tournmnt: how many candidates picked in tournament selection
       :param nght_stc: [get_sol, get delta], method of mutation, e.g. swap, 2-opt
       :param tabu_lst_size: >=0, max length of tabu_lst
       :param tabu_lst: deque ,out <- [...] <- in
@@ -58,7 +58,7 @@ class TSP:
 
       best_delta_1 = math.inf
       best_i_1 = best_j_1 = -1
-      for _ in range(max_tnm):
+      for _ in range(max_no_tournmnt):
           i, j = random.sample(range(no_v), 2)  # randomly select two indexes
           i, j = (i, j) if i < j else (j, i)  # let i < j
           vert_1, vert_2 = (sol[i], sol[j]) if sol[i] < sol[j] else (
