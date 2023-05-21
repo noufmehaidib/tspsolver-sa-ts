@@ -36,15 +36,15 @@ class TSP:
         delta = 0
      return delta
 
-    def tnm_selection(no_v, adj_mat, sol, max_tnm, nght_stc, tb_size, tb_list, best_cost):
+    def tnm_selection(no_v, adj_mat, sol, max_tnm, nght_stc, tabu_lst_size, tabu_lst, best_cost):
       """
       :param no_v: number of vertices
       :param adj_mat: adjacency matrix
       :param sol: solution where the neighbours are chosen from
       :param max_tnm: how many candidates picked in tournament selection
       :param nght_stc: [get_sol, get delta], method of mutation, e.g. swap, 2-opt
-      :param tb_size: >=0, max length of tb_list
-      :param tb_list: deque ,out <- [...] <- in
+      :param tabu_lst_size: >=0, max length of tabu_lst
+      :param tabu_lst: deque ,out <- [...] <- in
       :param best_cost: cost of the best solution
       """
 
@@ -64,7 +64,7 @@ class TSP:
           vert_1, vert_2 = (sol[i], sol[j]) if sol[i] < sol[j] else (
               sol[j], sol[i])  
           delta = get_delta(no_v, adj_mat, sol, i, j)
-          if (vert_1, vert_2) not in tb_list:  # if the sol is not tabu
+          if (vert_1, vert_2) not in tabu_lst:  # if the sol is not tabu
               if delta < best_delta_0:
                   best_delta_0 = delta
                   best_i_0 = i
@@ -76,22 +76,22 @@ class TSP:
                   best_j_1 = j
       if best_delta_1 < best_delta_0 and cost + best_delta_1 < best_cost:  # break the tabu
           vert_1, vert_2 = (sol[best_i_1], sol[best_j_1]) if sol[best_i_1] < sol[best_j_1] else (sol[best_j_1], sol[best_i_1])
-          tb_list.remove((vert_1, vert_2))
-          tb_list.append((vert_1, vert_2))  # move to the end of list
+          tabu_lst.remove((vert_1, vert_2))
+          tabu_lst.append((vert_1, vert_2))  # move to the end of list
           
           new_sol = get_new_sol(sol, best_i_1, best_j_1)
           new_cost = cost + best_delta_1
       else:   # do not break the tabu
-          if tb_size > 0: 
+          if tabu_lst_size > 0: 
              if sol[best_i_0] < sol[best_j_0]:
                 vert_1, vert_2 = (sol[best_i_0], sol[best_j_0]) 
              else:
               vert_1, vert_2 = (sol[best_j_0], sol[best_i_0])
-              if len(tb_list) == tb_size: # a move in the tabu list removed if exceed tabu_tenure
-                  tb_list.popleft()       
-              tb_list.append((vert_1, vert_2))
+              if len(tabu_lst) == tabu_lst_size: # a move in the tabu list removed if exceed tabu_tenure
+                  tabu_lst.popleft()       
+              tabu_lst.append((vert_1, vert_2))
         
           new_sol = get_new_sol(sol, best_i_0, best_j_0)
           new_cost = cost + best_delta_0
-      return new_sol, new_cost, tb_list
+      return new_sol, new_cost, tabu_lst
 

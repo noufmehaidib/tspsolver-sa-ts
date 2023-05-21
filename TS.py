@@ -5,12 +5,12 @@ from TSP import *
 
 class TS:
     
-        def ts(no_v, adj_mat, tb_size, max_tnm, ngh_strc, term_count):
+        def ts(no_v, adjacency_matrix, tabu_lst_size, max_tnm, ngh_strc, term_count):
 
             """
             no_v:       number of vertices
-            adj_mat:    adjacency matrix
-            tb_size:    tabu solutions in tb_list
+            adjacency_matrix:    adjacency matrix
+            tabu_lst_size:    tabu solutions in tabu_lst
             max_tnm:    how many candidates picked in tournament selection
             ngh_strc:   neighborhood structure (swap or 2-opt)
             term_count: termination flag
@@ -18,19 +18,19 @@ class TS:
             # initialization
             sol = list(range(no_v))
             random.shuffle(sol)  # e.g. [0,1,...,no_v]
-            tb_list = deque([])
+            tabu_lst = deque([])
             
             best_sol = sol.copy()
-            best_cost = TSP.cost(no_v, adj_mat, sol)
+            best_cost = TSP.cost(no_v, adjacency_matrix, sol)
             result = {'cost': deque([]), 'best_cost': deque([])}
             count = 0
 
             ###
             while True:
 
-                sol, cost, tb_list = TSP.tnm_selection(no_v, adj_mat, sol,
-                                                            max_tnm, ngh_strc, tb_size,
-                                                            tb_list, best_cost)
+                sol, cost, tabu_lst = TSP.tnm_selection(no_v, adjacency_matrix, sol,
+                                                            max_tnm, ngh_strc, tabu_lst_size,
+                                                            tabu_lst, best_cost)
                 # mention the iteratively variable 'sol'
                 if cost < best_cost:
                     best_sol = sol

@@ -11,53 +11,49 @@ import time
 import math
 import os
 
-#This class is responsible for starting the program.
+#This class is responsible for starting the program
 
 class MAIN:
         
         # welcome message
         print("####WELCOME TO TSP SOLVER####")
 
-        #comment the unwanted test bed
-
         # load tsp_38 file 
-        pos = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
-        no_v = len(pos)
+        file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
+        no_v = len(file_distance)
 
         # load qa194 file
-        #pos = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
-        #no_v = len(pos)
+        #file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
+        #no_v = len(file_distance)
 
         # calculate adjacency matrix
-        adj_mat = np.zeros([no_v, no_v]) #initialize all values to zero1es
+        adjacency_matrix = np.zeros([no_v, no_v]) #initialize all values to zero1es
         for i in range(no_v):
             for j in range(i, no_v):
-                adj_mat[i][j] = adj_mat[j][i] = np.linalg.norm(np.subtract(pos[i], pos[j]))
+                adjacency_matrix[i][j] = adjacency_matrix[j][i] = np.linalg.norm(np.subtract(file_distance[i], file_distance[j]))
 
         # initialization
-        #opt_cost = 6656  # opt for the tsp_38
-        opt_cost = 9352  # opt for the qa194
+        opt_cost = 6656  # opt for the tsp_38
+        #opt_cost = 9352  # opt for the qa194
         num_tests = 100 #this is for tqdm loop
         result = {'best_sol': [], 'best_cost': math.inf, 'best_gap': math.inf,
                   'cost': [0] * num_tests, 'time': [0] * num_tests,
                   'avg_cost': math.inf, 'avg_time': math.inf,
                   'min_cost': math.inf, 'min_time': math.inf,
                   'max_cost': math.inf, 'max_time': math.inf}
-
         best_cost = math.inf
         best_sol = []
         data = {}
 
-        # set both algorithm and operator method
-        algorithm = ''
-        operator = ''
+        # let the user choose the prefered algorithm (SA or TS) + operator (Swap or 2-opt)
 
         # choice of algorithm
+        algorithm = ''
         print("####PLEASE CHOOSE WHICH ALGORITHM YOU WOULD LIKE TO USE####")
         algorithm = input("#### 1: SIMULATED ANNEALING, 2: TABU SEARCH####")
 
-        # the initial temperature and the reduction factor are randomly generated
-        # since there is lots of randomness, print t_0 and alpha to be used later on to compare the results:
+        # if the chosen algorithm is SA,the initial temperature (t_0) and the reduction factor (alpha) are randomly generated
+        # print t_0 and alpha to be used later on to compare the results:
         if algorithm == '1':
             t_0=random.randint(1000,5000)
             alpha=random.random()
@@ -65,6 +61,7 @@ class MAIN:
             print("The reduction factor is:", alpha)
 
         # choice of neighborhood structure
+        operator = ''
         print("####PLEASE CHOOSE WHICH NEIGHBORHOOD STRUCTURE YOU WOULD LIKE TO USE####")
         operator = input("#### 1: SWAP, 2: 2-OPT ####")
 
@@ -78,18 +75,19 @@ class MAIN:
         else:
             exit
         
-        #start time
+        #start searching
+        #start time of search
         start = time.time()
         for _ in tqdm(range(num_tests)):    
             # SA Algorithm
             if algorithm == '1':
                 algorithm_name = 'Simulated Anealing'
-                best_sol, best_cost, data = SA.sa(no_v,adj_mat=adj_mat,tb_size = 0,max_tnm=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=50000,t_0=t_0,alpha=alpha)
+                best_sol, best_cost, data = SA.sa(no_v,adjacency_matrix,tabu_lst_size = 0,max_tnm=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=1000,t_0=t_0,alpha=alpha)
 
             # TS Algorithm
             elif algorithm == '2':
                  algorithm_name = 'Tabu Search'
-                 best_sol, best_cost, data = TS.ts(no_v, adj_mat=adj_mat, tb_size=25,  max_tnm=100,  ngh_strc=ngh_strc, term_count=50000)
+                 best_sol, best_cost, data = TS.ts(no_v,adjacency_matrix,tabu_lst_size=25,max_tnm=100,ngh_strc=ngh_strc, term_count=1000)
 
             # not a valid choice (run the application again to start)
             else:
@@ -118,6 +116,7 @@ class MAIN:
         result['min_time'] = np.min(result['time'])
             
         # print results
+        print('Search using ' + algorithm_name)
         print('best_sol',result['best_sol'])
         print('best_cost',result['best_cost'])
         print('best_gap',result['best_gap'])

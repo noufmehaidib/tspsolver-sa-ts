@@ -8,12 +8,12 @@ import math
 
 class SA:
 
-        def sa(no_v, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
+        def sa(no_v, adjacency_matrix, tabu_lst_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
 
             """
             no_v: number of vertices
-            adj_mat: adjacency matrix
-            tb_size: max length of tb_list, here in sa it is always zero
+            adjacency_matrix: adjacency matrix
+            tabu_lst_size: max length of tabu_lst, here in sa it is always zero
             tabu_tenure: The duration the solution kept on the tabu list, here in sa it will not be used
             max_tnm: candidates picked in tournament selection
             nght_stc: neighborhood structure (swap or 2-opt)
@@ -26,10 +26,10 @@ class SA:
             # initialization
             sol = list(range(no_v)) #get a permutation
             random.shuffle(sol)  # e.g. [0,1,...,no_v]
-            cost = TSP.cost(no_v, adj_mat, sol)
+            cost = TSP.cost(no_v, adjacency_matrix, sol)
             best_sol = sol.copy()
             best_cost = cost
-            tb_list = deque([]) #empty (not used)
+            tabu_lst = deque([]) #empty (not used)
             fq_dict = {}  #empty (not used)
             t = t_0
             result = {'cost': deque([]), 'best_cost': deque([]),
@@ -48,9 +48,9 @@ class SA:
                     last_cost = cost
 
                     #get a neighboring solution
-                    sol, cost, tb_list = TSP.tnm_selection(no_v, adj_mat, sol,
-                                                    max_tnm, ngh_strc, tb_size,
-                                                    tb_list, best_cost)
+                    sol, cost, tabu_lst = TSP.tnm_selection(no_v, adjacency_matrix, sol,
+                                                    max_tnm, ngh_strc, tabu_lst_size,
+                                                    tabu_lst, best_cost)
 
                     # update the solution
                     # (1) if the new solution is worse (it can be accepted with a random propability)
