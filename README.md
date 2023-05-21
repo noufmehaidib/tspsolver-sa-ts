@@ -1,5 +1,5 @@
 # Overview
-This application solves Traveling SalesMan Problem (TSP) using two meta-heuristic Simulated Annealing (SA) and Tabu Search (TS).
+This application solves Traveling Salesman Problem (TSP) using two meta-heuristic Simulated Annealing (SA) and Tabu Search (TS).
 Term project of Selected Topics in Computer Science, King Saud Universty Course.
 
 # Details of implementation 
