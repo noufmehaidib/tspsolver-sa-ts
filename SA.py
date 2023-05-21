@@ -90,5 +90,5 @@ class SA:
                 if count_2 > term_flag_2:
                    break
 
-                result['fq_dict'] = fq_dict
+                
                 return best_sol, best_cost, result
