@@ -21,7 +21,7 @@ class MAIN:
         #comment the unwanted test bed
 
         # load tsp_38 file 
-        pos = [[float(x) for x in s.split()[1:]] for s in open('data/tsp_38.txt').readlines()]
+        pos = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
         no_v = len(pos)
 
         # load qa194 file
@@ -59,7 +59,7 @@ class MAIN:
         # the initial temperature and the reduction factor are randomly generated
         # since there is lots of randomness, print t_0 and alpha to be used later on to compare the results:
         if algorithm == '1':
-            t_0=random.randint(3000,5000)
+            t_0=random.randint(1000,5000)
             alpha=random.random()
             print("The initial temperature is: ",t_0)
             print("The reduction factor is:", alpha)
@@ -84,12 +84,12 @@ class MAIN:
             # SA Algorithm
             if algorithm == '1':
                 algorithm_name = 'Simulated Anealing'
-                best_sol, best_cost, data = SA.sa(no_v,adj_mat=adj_mat,tb_size = 0,max_tnm=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=100000,t_0=t_0,alpha=alpha)
+                best_sol, best_cost, data = SA.sa(no_v,adj_mat=adj_mat,tb_size = 0,max_tnm=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=50000,t_0=t_0,alpha=alpha)
 
             # TS Algorithm
             elif algorithm == '2':
                  algorithm_name = 'Tabu Search'
-                 best_sol, best_cost, data = TS.ts(no_v, adj_mat=adj_mat, tb_size=25,  max_tnm=100,  ngh_strc=ngh_strc, term_count=1000)
+                 best_sol, best_cost, data = TS.ts(no_v, adj_mat=adj_mat, tb_size=25,  max_tnm=100,  ngh_strc=ngh_strc, term_count=50000)
 
             # not a valid choice (run the application again to start)
             else:
