@@ -23,14 +23,9 @@ class MAIN:
         # file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
         # no_v = len(file_distance)
 
-        # calculate adjacency matrix
-        adjacency_matrix = np.zeros([no_v, no_v]) #initialize all values to zero1es
-        for i in range(no_v):
-            for j in range(i, no_v):
-                adjacency_matrix[i][j] = adjacency_matrix[j][i] = np.linalg.norm(np.subtract(file_distance[i], file_distance[j]))
 
         # initialization
-        opt_cost = 6656  # opt for the tsp_38
+        opt_cost = 6659.439330623091  # opt for the tsp_38
         #opt_cost = 9352  # opt for the qa194
         num_tests = 100 #this is for tqdm loop
         result = {'best_sol': [], 'best_cost': math.inf, 'best_gap': math.inf,
@@ -41,6 +36,13 @@ class MAIN:
         best_cost = math.inf
         best_sol = []
         data = {}
+
+        # calculate adjacency matrix
+        adjacency_matrix = np.zeros([no_v, no_v]) #initialize all values to zero1es
+        for i in range(no_v):
+            for j in range(i, no_v):
+                adjacency_matrix[i][j] = adjacency_matrix[j][i] = np.linalg.norm(np.subtract(file_distance[i], file_distance[j]))
+
 
         # let the user choose the prefered algorithm (SA or TS) + operator (Swap or 2-opt)
 
@@ -75,6 +77,7 @@ class MAIN:
         #start searching
         #start time of search
         start = time.time()
+        # 
         for _ in tqdm(range(num_tests)):    
             # SA Algorithm
             if algorithm == '1':
@@ -84,7 +87,7 @@ class MAIN:
             # TS Algorithm
             elif algorithm == '2':
                  algorithm_name = 'Tabu Search'
-                 best_sol, best_cost, data = TS.ts(no_v,adjacency_matrix,tabu_lst_size=25,max_no_tournmnt=100,ngh_strc=ngh_strc, term_flag=1000)
+                 best_sol, best_cost, data = TS.ts(no_v,adjacency_matrix,tabu_lst_size=25,max_no_tournmnt=100,ngh_strc=ngh_strc,term_flag=1000)
 
             # not a valid choice (run the application again to start)
             else:
