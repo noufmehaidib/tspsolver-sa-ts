@@ -1,14 +1,14 @@
 #imports required libraries
 
 from collections import deque
-# from TS import tnm_selection
+from TS import *
 from TSP import *
 import random
 import math
 
 class SA:
 
-        def sa(no_v, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha,tabu_tenure):
+        def sa(no_v, adj_mat, tb_size, max_tnm, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
 
             """
             no_v: number of vertices
@@ -26,22 +26,19 @@ class SA:
             # initialization
             sol = list(range(no_v)) #get a permutation
             random.shuffle(sol)  # e.g. [0,1,...,n]
-            cost = cost(no_v, adj_mat, sol)
+            cost = TSP.cost(no_v, adj_mat, sol)
             best_sol = sol.copy()
             best_cost = cost
-            tb_list = deque() #empty (not used)
+            tb_list = deque([]) #empty (not used)
             fq_dict = {}  #empty (not used)
             t = t_0
             result = {'cost': deque([]), 'best_cost': deque([]),
                 'sol': deque([]), 'best_sol': deque([])}
             count_outer = 0
 
-            #since there is lots of randomness, print t_0 and alpha to be used later on to compare the results:
-            print("The initial temperature is:" + t_0)
-            print("The reduction factor is:" + alpha)
-
             #start outer loop
             while True:
+
                 count_inner = 0
                 best_inner_sol = sol
                 best_inner_cost = cost
@@ -51,9 +48,9 @@ class SA:
                     last_cost = cost
 
                     #get a neighboring solution
-                    sol, cost, tb_list, fq_dict = TSP.tnm_selection(no_v, adj_mat, sol,
-                                                            max_tnm, ngh_strc, tb_size,
-                                                            tb_list, fq_dict, best_cost,tabu_tenure)
+                    sol, cost, tb_list = TSP.tnm_selection(no_v, adj_mat, sol,
+                                                    max_tnm, ngh_strc, tb_size,
+                                                    tb_list, best_cost)
 
                     # update the solution
                     # (1) if the new solution is worse (it can be accepted with a random propability)

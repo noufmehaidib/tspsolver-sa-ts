@@ -37,75 +37,62 @@ class TSP:
         delta = 0
      return delta
 
-    def tnm_selection(n, adj_mat, current_sol, max_tnm, ngh_strc, tb_size, tb_list, fq_dict, best_cost, tabu_tenure):
+    def tnm_selection(no_v, adj_mat, sol, max_tnm, nght_stc, tb_size, tb_list, best_cost):
       """
-      : n: number of vertices
-      : adj_mat: adjacency matrix
-      : sol: solution where the neighbours are chosen from
-      : max_tnm: how many candidates picked in tournament selection
-      : ngh_strc: [get_sol, get delta], method of mutation, e.g. swap, 2-opt
-      : tb_size: >=0, max length of tb_list
-      : tb_list: deque ,out <- [...] <- in
-      : fq_dict: visit times of a solution in the tabu list
-      : tabu_tenure: max number of iteration that a solution stays in the tabu list
-      : best_cost: cost of the best solution
+      :param n: number of vertices
+      :param adj_mat: adjacency matrix
+      :param sol: solution where the neighbours are chosen from
+      :param max_tnm: how many candidates picked in tournament selection
+      :param nght_stc: [get_sol, get delta], method of mutation, e.g. swap, 2-opt
+      :param tb_size: >=0, max length of tb_list
+      :param tb_list: deque ,out <- [...] <- in
+      :param best_cost: cost of the best solution
       """
 
-      get_new_sol = ngh_strc[0]
-      get_delta = ngh_strc[1]
+      get_new_sol = nght_stc[0]
+      get_delta = nght_stc[1]
 
-      cost_current_sol = TSP.cost(n, adj_mat, current_sol)
+      cost = TSP.cost(no_v, adj_mat, sol)
 
       best_delta_0 = math.inf
-      best_i_0 = best_j_0 = -1  # To determine the best move
+      best_i_0 = best_j_0 = -1
 
       best_delta_1 = math.inf
       best_i_1 = best_j_1 = -1
-
-      for l in range(max_tnm):
-
-          for key in fq_dict.keys():
-              # update the number of iteration that the solution stays in the tabu list
-              fq_dict[(key)] = fq_dict.get(key, 0) + 1
-          i, j = random.sample(range(n), 2)  # randomly select two indexes
+      for _ in range(max_tnm):
+          i, j = random.sample(range(no_v), 2)  # randomly select two indexes
           i, j = (i, j) if i < j else (j, i)  # let i < j
-
-          sol_to_test = get_new_sol(current_sol, i, j)
-          delta = get_delta(n, adj_mat, current_sol, i, j)
-          if tuple(sol_to_test) not in tb_list:  # if the sol is not tabu
+          v_1, v_2 = (sol[i], sol[j]) if sol[i] < sol[j] else (
+              sol[j], sol[i])  # v_1 < v_2 make indexing in tb_list and fq_dict convenient
+          delta = get_delta(no_v, adj_mat, sol, i, j)
+          if (v_1, v_2) not in tb_list:  # if not tabu
               if delta < best_delta_0:
                   best_delta_0 = delta
                   best_i_0 = i
                   best_j_0 = j
-          else:  # If it in tabu it will be accepted if it has an improvement over the current best solution to escape from local optima
+          else:  # if tabu
               if delta < best_delta_1:
                   best_delta_1 = delta
                   best_i_1 = i
                   best_j_1 = j
-      if best_delta_1 < best_delta_0 and cost_current_sol + best_delta_1 < best_cost:  # break the tabu
-          new_sol = get_new_sol(current_sol, best_i_1, best_j_1)
-          new_cost = cost_current_sol + best_delta_1
-          k = new_sol
-          tb_list.remove(tuple(k))
-          tb_list.append(tuple(k))  # move to the end of list
-          fq_dict[tuple(k)] += 1  # update fq_dict
+      if best_delta_1 < best_delta_0 and cost + best_delta_1 < best_cost:  # break the tabu
+          v_1, v_2 = (sol[best_i_1], sol[best_j_1]) if sol[best_i_1] < sol[best_j_1] else (sol[best_j_1], sol[best_i_1])
+          tb_list.remove((v_1, v_2))
+          tb_list.append((v_1, v_2))  # move to the end of list
+          
+          new_sol = get_new_sol(sol, best_i_1, best_j_1)
+          new_cost = cost + best_delta_1
       else:  # do not break the tabu
           if tb_size > 0:
+              v_1, v_2 = (sol[best_i_0], sol[best_j_0]) \
+                  if sol[best_i_0] < sol[best_j_0] \
+                  else (sol[best_j_0], sol[best_i_0])
               if len(tb_list) == tb_size:
-                  k = tb_list.popleft()
-                  if k in fq_dict.keys():
-                    fq_dict.pop(tuple(k))
-              new_sol = get_new_sol(current_sol, best_i_0, best_j_0)
-              new_cost = cost_current_sol + best_delta_0
-              k = new_sol
-              fq_dict[tuple(k)] = 1  # update fq_dict
-              tb_list.append(tuple(k))
-      keys = []
-      for key, v in fq_dict.items():
-        if v >= tabu_tenure:
-          keys.append(key)
-      for key in keys:  # a solution in the tabu list removed if exceed tabu_tenure
-        fq_dict.pop(key)
-        tb_list.remove(key)
+                  tb_list.popleft()
+              tb_list.append((v_1, v_2))
+        
+          new_sol = get_new_sol(sol, best_i_0, best_j_0)
+          new_cost = cost + best_delta_0
+      # assert abs(new_cost - get_cost(n, adj_mat, new_sol)) < 1e-9, 'new_sol does not match new_cost'
+      return new_sol, new_cost, tb_list
 
-      return new_sol, new_cost, tb_list, fq_dict
