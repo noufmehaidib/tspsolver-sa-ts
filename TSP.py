@@ -2,7 +2,6 @@ import random
 import math
 from collections import deque
 
-
 class TSP:
 
     def cost(no_v, adjacency_matrix, solution):
@@ -94,6 +93,5 @@ class TSP:
         
           new_sol = get_new_sol(sol, best_i_0, best_j_0)
           new_cost = cost + best_delta_0
-      # assert abs(new_cost - get_cost(no_v, adj_mat, new_sol)) < 1e-9, 'new_sol does not match new_cost'
       return new_sol, new_cost, tb_list
 
