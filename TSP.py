@@ -63,14 +63,14 @@ class TSP:
           i, j = random.sample(range(no_v), 2)  # randomly select two indexes
           i, j = (i, j) if i < j else (j, i)  # let i < j
           v_1, v_2 = (sol[i], sol[j]) if sol[i] < sol[j] else (
-              sol[j], sol[i])  # v_1 < v_2 make indexing in tb_list and fq_dict convenient
+              sol[j], sol[i])  
           delta = get_delta(no_v, adj_mat, sol, i, j)
-          if (v_1, v_2) not in tb_list:  # if not tabu
+          if (v_1, v_2) not in tb_list:  # if the sol is not tabu
               if delta < best_delta_0:
                   best_delta_0 = delta
                   best_i_0 = i
                   best_j_0 = j
-          else:  # if tabu
+          else:  # If it in tabu it will be accepted if it has an improvement over the current best solution to escape from local optima
               if delta < best_delta_1:
                   best_delta_1 = delta
                   best_i_1 = i
@@ -82,17 +82,17 @@ class TSP:
           
           new_sol = get_new_sol(sol, best_i_1, best_j_1)
           new_cost = cost + best_delta_1
-      else:  # do not break the tabu
-          if tb_size > 0:
-              v_1, v_2 = (sol[best_i_0], sol[best_j_0]) \
-                  if sol[best_i_0] < sol[best_j_0] \
-                  else (sol[best_j_0], sol[best_i_0])
-              if len(tb_list) == tb_size:
-                  tb_list.popleft()
+      else:   # do not break the tabu
+          if tb_size > 0: 
+             if sol[best_i_0] < sol[best_j_0]:
+                v_1, v_2 = (sol[best_i_0], sol[best_j_0]) 
+             else:
+              v_1, v_2 = (sol[best_j_0], sol[best_i_0])
+              if len(tb_list) == tb_size: # a move in the tabu list removed if exceed tabu_tenure
+                  tb_list.popleft()       
               tb_list.append((v_1, v_2))
         
           new_sol = get_new_sol(sol, best_i_0, best_j_0)
           new_cost = cost + best_delta_0
-      # assert abs(new_cost - get_cost(n, adj_mat, new_sol)) < 1e-9, 'new_sol does not match new_cost'
       return new_sol, new_cost, tb_list
 
