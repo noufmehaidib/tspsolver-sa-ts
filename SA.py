@@ -25,7 +25,7 @@ class SA:
 
             # initialization
             sol = list(range(no_v)) #get a permutation
-            random.shuffle(sol)  # e.g. [0,1,...,n]
+            random.shuffle(sol)  # e.g. [0,1,...,no_v]
             cost = TSP.cost(no_v, adj_mat, sol)
             best_sol = sol.copy()
             best_cost = cost

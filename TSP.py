@@ -5,8 +5,8 @@ from collections import deque
 
 class TSP:
 
-    def cost(n, adjacency_matrix, solution):
-     return sum([adjacency_matrix[solution[_]][solution[(_ + 1) % n]] for _ in range(n)])
+    def cost(no_v, adjacency_matrix, solution):
+     return sum([adjacency_matrix[solution[_]][solution[(_ + 1) % no_v]] for _ in range(no_v)])
 
     def swap_Solution(solution, i, j):
      new_solution = solution.copy()
@@ -18,28 +18,28 @@ class TSP:
       new_solution[i:j+1] = new_solution[i:j+1][::-1]
       return new_solution
 
-    def delta_Swap(n, adjacency_matrix, solution, i, j):
-     delta = adjacency_matrix[solution[i - 1]][solution[j]] + adjacency_matrix[solution[j]][solution[(i + 1) % n]] + \
-             adjacency_matrix[solution[j - 1]][solution[i]] + adjacency_matrix[solution[i]][solution[(j + 1) % n]] - \
-             adjacency_matrix[solution[i - 1]][solution[i]] - adjacency_matrix[solution[i]][solution[(i + 1) % n]] - \
+    def delta_Swap(no_v, adjacency_matrix, solution, i, j):
+     delta = adjacency_matrix[solution[i - 1]][solution[j]] + adjacency_matrix[solution[j]][solution[(i + 1) % no_v]] + \
+             adjacency_matrix[solution[j - 1]][solution[i]] + adjacency_matrix[solution[i]][solution[(j + 1) % no_v]] - \
+             adjacency_matrix[solution[i - 1]][solution[i]] - adjacency_matrix[solution[i]][solution[(i + 1) % no_v]] - \
              adjacency_matrix[solution[j - 1]][solution[j]] - \
-                 adjacency_matrix[solution[j]][solution[(j + 1) % n]]
-     if j - i == 1 or i == 0 and j == n - 1:
+                 adjacency_matrix[solution[j]][solution[(j + 1) % no_v]]
+     if j - i == 1 or i == 0 and j == no_v - 1:
         delta += 2 * adjacency_matrix[solution[i]
                                       ][solution[j]]  # symmetrical TSP
      return delta
 
-    def delta_twoOpt(n, adjacency_matrix, solution, i, j):
-     delta = adjacency_matrix[solution[i - 1]][solution[j]] + adjacency_matrix[solution[i]][solution[(j + 1) % n]] - \
+    def delta_twoOpt(no_v, adjacency_matrix, solution, i, j):
+     delta = adjacency_matrix[solution[i - 1]][solution[j]] + adjacency_matrix[solution[i]][solution[(j + 1) % no_v]] - \
              adjacency_matrix[solution[i - 1]][solution[i]] - \
-                 adjacency_matrix[solution[j]][solution[(j + 1) % n]]
-     if i == 0 and j == n - 1:  # the first two value == 0, while others < 0
+                 adjacency_matrix[solution[j]][solution[(j + 1) % no_v]]
+     if i == 0 and j == no_v - 1:  # the first two value == 0, while others < 0
         delta = 0
      return delta
 
     def tnm_selection(no_v, adj_mat, sol, max_tnm, nght_stc, tb_size, tb_list, best_cost):
       """
-      :param n: number of vertices
+      :param no_v: number of vertices
       :param adj_mat: adjacency matrix
       :param sol: solution where the neighbours are chosen from
       :param max_tnm: how many candidates picked in tournament selection
@@ -94,5 +94,9 @@ class TSP:
         
           new_sol = get_new_sol(sol, best_i_0, best_j_0)
           new_cost = cost + best_delta_0
+<<<<<<< Updated upstream
+=======
+      # assert abs(new_cost - get_cost(no_v, adj_mat, new_sol)) < 1e-9, 'new_sol does not match new_cost'
+>>>>>>> Stashed changes
       return new_sol, new_cost, tb_list
 
