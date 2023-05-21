@@ -18,7 +18,7 @@ The tsp solver has 4 classes:
 The tsp solver has 2 folders:
 
         -----------> data:
-                     contains the test bed used.
+                     contains the test beds used.
         -----------> results:
                      displays the figure of the convergence.
                      
