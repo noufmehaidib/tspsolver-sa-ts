@@ -15,7 +15,7 @@ class MAIN:
         # welcome message
         print("####WELCOME TO TSP SOLVER####")
 
-        # load tsp_38 file 
+        # load dj38 file 
         # file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
         # no_v = len(file_distance)
 
@@ -53,7 +53,7 @@ class MAIN:
         # if the chosen algorithm is SA,the initial temperature (t_0) and the reduction factor (alpha) are randomly generated
         # print t_0 and alpha to be used later on to compare the results:
         if algorithm == '1':
-            t_0=random.randint(1000,5000)
+            t_0=1000
             alpha=random.random()
             print("The initial temperature is: ",t_0)
             print("The reduction factor is:", alpha)

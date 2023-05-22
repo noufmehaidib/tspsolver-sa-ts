@@ -29,20 +29,17 @@ class TSP:
              adjacency_matrix[solution[j - 1]][solution[j]] - \
                  adjacency_matrix[solution[j]][solution[(j + 1) % no_v]]
      if j - i == 1 or i == 0 and j == no_v - 1:
-        delta += 2 * adjacency_matrix[solution[i]
-                                      ][solution[j]]  # symmetrical TSP
-     return delta
+        delta += 2 * adjacency_matrix[solution[i]][solution[j]]  # symmetrical TSP
+     return delta                                     
 
     def delta_twoOpt(no_v, adjacency_matrix, solution, i, j):
-     delta = adjacency_matrix[solution[i - 1]][solution[j]] + adjacency_matrix[solution[i]][solution[(j + 1) % no_v]] - \
-             adjacency_matrix[solution[i - 1]][solution[i]] - \
-                 adjacency_matrix[solution[j]][solution[(j + 1) % no_v]]
-     if i == 0 and j == no_v - 1:  # the first two value == 0, while others < 0
+      delta = adjacency_matrix[solution[i - 1]][solution[j]] + adjacency_matrix[solution[i]][solution[(j + 1) % no_v]] - \
+            adjacency_matrix[solution[i - 1]][solution[i]] - adjacency_matrix[solution[j]][solution[(j + 1) % no_v]]
+      if i == 0 and j == no_v - 1:  # the first two value == 0, while others < 0
         delta = 0
-     return delta
-    
-    # tournment selection for generating new solution from the neighborhood
-    def tournament_selection(no_v, adjacency_matrix, solution, max_no_tournmnt, nght_stc, tabu_lst_size, tabu_lst, best_cost):
+      return delta
+
+    def tnm_selection(no_v, adj_mat, sol, max_tnm, nght_stc, tabu_lst_size, tabu_lst, best_cost):
       """
       no_v:                  number of vertices
       adjacency_matrix:      adjacency matrix
