@@ -1,6 +1,4 @@
-#imports required libraries
-
-import matplotlib.pyplot as plt
+# imports required libraries
 from tqdm import tqdm
 import numpy as np
 from TSP import *
@@ -9,9 +7,8 @@ from TS import *
 import random
 import time
 import math
-import os
 
-#This class is responsible for starting the program
+# this class is responsible for starting the program.
 
 class MAIN:
         
@@ -19,22 +16,17 @@ class MAIN:
         print("####WELCOME TO TSP SOLVER####")
 
         # load tsp_38 file 
-        file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
-        no_v = len(file_distance)
+        # file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
+        # no_v = len(file_distance)
 
         # load qa194 file
-        #file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
-        #no_v = len(file_distance)
+        file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
+        no_v = len(file_distance)
 
-        # calculate adjacency matrix
-        adjacency_matrix = np.zeros([no_v, no_v]) #initialize all values to zero1es
-        for i in range(no_v):
-            for j in range(i, no_v):
-                adjacency_matrix[i][j] = adjacency_matrix[j][i] = np.linalg.norm(np.subtract(file_distance[i], file_distance[j]))
 
         # initialization
-        opt_cost = 6656  # opt for the tsp_38
-        #opt_cost = 9352  # opt for the qa194
+        #opt_cost = 6659.43 # opt for the dj38 solved in guroby.py
+        opt_cost = 9352  # opt for the qa194 solved in guroby.py
         num_tests = 100 #this is for tqdm loop
         result = {'best_sol': [], 'best_cost': math.inf, 'best_gap': math.inf,
                   'cost': [0] * num_tests, 'time': [0] * num_tests,
@@ -44,6 +36,12 @@ class MAIN:
         best_cost = math.inf
         best_sol = []
         data = {}
+
+        # calculate adjacency matrix
+        adjacency_matrix = np.zeros([no_v, no_v]) #initialize all values to zero1es
+        for i in range(no_v):
+            for j in range(i, no_v):
+                adjacency_matrix[i][j] = adjacency_matrix[j][i] = np.linalg.norm(np.subtract(file_distance[i], file_distance[j]))
 
         # let the user choose the prefered algorithm (SA or TS) + operator (Swap or 2-opt)
 
@@ -65,35 +63,37 @@ class MAIN:
         print("####PLEASE CHOOSE WHICH NEIGHBORHOOD STRUCTURE YOU WOULD LIKE TO USE####")
         operator = input("#### 1: SWAP, 2: 2-OPT ####")
 
-        # Swap
+        # swap
         if operator == '1':
+            operator_name = 'Swap Operator'
             ngh_strc = [TSP.swap_Solution, TSP.delta_Swap]
         # 2-opt
         elif operator == '2':
+            operator_name = '2-opt Operator'
             ngh_strc = [TSP.twoOpt_Solution, TSP.delta_twoOpt]
         # not a valid choice (run the application again to start)
         else:
             exit
         
-        #start searching
-        #start time of search
+        # start searching
+        # start time of search
         start = time.time()
         for _ in tqdm(range(num_tests)):    
             # SA Algorithm
             if algorithm == '1':
                 algorithm_name = 'Simulated Anealing'
-                best_sol, best_cost, data = SA.sa(no_v,adjacency_matrix,tabu_lst_size = 0,max_tnm=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=1000,t_0=t_0,alpha=alpha)
+                best_sol, best_cost, data = SA.sa(no_v,adjacency_matrix,tabu_lst_size=0,max_no_tournmnt=100,ngh_strc=ngh_strc,term_flag_1=50, term_flag_2=1000,t_0=t_0,alpha=alpha)
 
             # TS Algorithm
             elif algorithm == '2':
                  algorithm_name = 'Tabu Search'
-                 best_sol, best_cost, data = TS.ts(no_v,adjacency_matrix,tabu_lst_size=25,max_tnm=100,ngh_strc=ngh_strc, term_count=1000)
+                 best_sol, best_cost, data = TS.ts(no_v,adjacency_matrix,tabu_lst_size=25,max_no_tournmnt=100,ngh_strc=ngh_strc,term_flag=1000)
 
             # not a valid choice (run the application again to start)
             else:
                 exit
 
-            #end time
+            # end serach time
             end = time.time()
             result['time'][_] = end - start
             result['cost'][_] = best_cost
@@ -103,7 +103,7 @@ class MAIN:
                 result['best_gap'] = best_cost / opt_cost - 1
 
         # update results
-        #avg
+        # avg
         result['avg_cost'] = np.mean(result['cost'])
         result['avg_time'] = np.mean(result['time'])
             
@@ -111,15 +111,15 @@ class MAIN:
         result['max_cost'] = np.max(result['cost'])
         result['max_time'] = np.max(result['time'])
             
-        #min
+        # min
         result['min_cost'] = np.min(result['cost'])
         result['min_time'] = np.min(result['time'])
             
         # print results
-        print('Search using ' + algorithm_name)
+        print('Search using ' + algorithm_name + 'and' + operator_name)
         print('best_sol',result['best_sol'])
         print('best_cost',result['best_cost'])
-        print('best_gap',result['best_gap'])
+        #print('best_gap',result['best_gap'])
         print('time',result['time'][_])
 
         # print('avg_cost',result['avg_cost'])

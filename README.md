@@ -24,6 +24,5 @@ The tsp solver has 2 folders:
                      
  # Getting Started
  Test bed `dj38.txt` and `qa194.txt` can be found in [National Travelling Salesman Problem](http://www.math.uwaterloo.ca/tsp/world/countries.html#DJ).
- The optimal tour length is obtained from the same site, and then the value obtained is used as `opt_cost` in `main.py` to calculate the optimality gap.
 
  To run the program, open `main.py` and choose your prefered algorithm/neighborhood structure.

@@ -1,22 +1,23 @@
-import random
-import math
+# imports required libraries
 from collections import deque
 from TSP import *
+import random
 
+# this class represents Tabu Search algorithm.
 class TS:
     
-        def ts(no_v, adjacency_matrix, tabu_lst_size, max_tnm, ngh_strc, term_count):
+        def ts(no_v, adjacency_matrix, tabu_lst_size, max_no_tournmnt, ngh_strc, term_flag):
 
             """
-            no_v:       number of vertices
+            no_v:                number of vertices
             adjacency_matrix:    adjacency matrix
-            tabu_lst_size:    tabu solutions in tabu_lst
-            max_tnm:    how many candidates picked in tournament selection
-            ngh_strc:   neighborhood structure (swap or 2-opt)
-            term_count: termination flag
+            tabu_lst_size:       number of tabu solutions in tabu_lst
+            max_no_tournmnt:     number of candidates picked in tournament selection (neighbors to evalute)
+            ngh_strc:            neighborhood structure (swap or 2-opt)
+            term_flag:           termination flag
             """
             # initialization
-            sol = list(range(no_v))
+            sol = list(range(no_v)) #get a permutation
             random.shuffle(sol)  # e.g. [0,1,...,no_v]
             tabu_lst = deque([])
             
@@ -25,22 +26,29 @@ class TS:
             result = {'cost': deque([]), 'best_cost': deque([])}
             count = 0
 
-            ###
+            # start loop
             while True:
-
-                sol, cost, tabu_lst = TSP.tnm_selection(no_v, adjacency_matrix, sol,
-                                                            max_tnm, ngh_strc, tabu_lst_size,
+                #get a neighboring solution and its cost, update the tabu list
+                sol, cost, tabu_lst = TSP.tournament_selection(no_v, adjacency_matrix, sol,
+                                                            max_no_tournmnt, ngh_strc, tabu_lst_size,
                                                             tabu_lst, best_cost)
-                # mention the iteratively variable 'sol'
+                
+                # (1) if the new solution is better (always accept)
                 if cost < best_cost:
                     best_sol = sol
                     best_cost = cost
-                    count = 0
-                else:
+                    count = 0 
+                # (2) if not better, count++
+                else: #else
                     count += 1
+
                 result['cost'].append(cost)
                 result['best_cost'].append(best_cost)
-                if count > term_count:
+
+                # check number of iteration
+                if count > term_flag: #termination criteria 
                     break
+
+            # return the best solution found so far     
             return best_sol, best_cost, result
 
