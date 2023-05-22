@@ -1,4 +1,4 @@
-#imports required libraries
+# imports required libraries
 from tqdm import tqdm
 import numpy as np
 from TSP import *
@@ -8,7 +8,7 @@ import random
 import time
 import math
 
-#This class is responsible for starting the program
+# this class is responsible for starting the program.
 
 class MAIN:
         
@@ -16,17 +16,17 @@ class MAIN:
         print("####WELCOME TO TSP SOLVER####")
 
         # load tsp_38 file 
-        file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
-        no_v = len(file_distance)
+        # file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
+        # no_v = len(file_distance)
 
         # load qa194 file
-        # file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
-        # no_v = len(file_distance)
+        file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/qa194.txt').readlines()]
+        no_v = len(file_distance)
 
 
         # initialization
-        opt_cost = 6659.439330623091  # opt for the tsp_38
-        #opt_cost = 9352  # opt for the qa194
+        #opt_cost = 6659.43 # opt for the dj38 solved in guroby.py
+        opt_cost = 9352  # opt for the qa194 solved in guroby.py
         num_tests = 100 #this is for tqdm loop
         result = {'best_sol': [], 'best_cost': math.inf, 'best_gap': math.inf,
                   'cost': [0] * num_tests, 'time': [0] * num_tests,
@@ -42,7 +42,6 @@ class MAIN:
         for i in range(no_v):
             for j in range(i, no_v):
                 adjacency_matrix[i][j] = adjacency_matrix[j][i] = np.linalg.norm(np.subtract(file_distance[i], file_distance[j]))
-
 
         # let the user choose the prefered algorithm (SA or TS) + operator (Swap or 2-opt)
 
@@ -66,18 +65,19 @@ class MAIN:
 
         # swap
         if operator == '1':
+            operator_name = 'Swap Operator'
             ngh_strc = [TSP.swap_Solution, TSP.delta_Swap]
         # 2-opt
         elif operator == '2':
+            operator_name = '2-opt Operator'
             ngh_strc = [TSP.twoOpt_Solution, TSP.delta_twoOpt]
         # not a valid choice (run the application again to start)
         else:
             exit
         
-        #start searching
-        #start time of search
+        # start searching
+        # start time of search
         start = time.time()
-        # 
         for _ in tqdm(range(num_tests)):    
             # SA Algorithm
             if algorithm == '1':
@@ -93,7 +93,7 @@ class MAIN:
             else:
                 exit
 
-            #end serach time
+            # end serach time
             end = time.time()
             result['time'][_] = end - start
             result['cost'][_] = best_cost
@@ -116,10 +116,10 @@ class MAIN:
         result['min_time'] = np.min(result['time'])
             
         # print results
-        print('Search using ' + algorithm_name)
+        print('Search using ' + algorithm_name + 'and' + operator_name)
         print('best_sol',result['best_sol'])
         print('best_cost',result['best_cost'])
-        print('best_gap',result['best_gap'])
+        #print('best_gap',result['best_gap'])
         print('time',result['time'][_])
 
         # print('avg_cost',result['avg_cost'])

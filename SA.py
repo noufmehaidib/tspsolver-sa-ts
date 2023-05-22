@@ -1,26 +1,26 @@
-#imports required libraries
-
+# imports required libraries
 from collections import deque
 from TSP import *
 from TS import *
 import random
 import math
 
+# this class represents the Simulated Annealing algorithm.
+
 class SA:
 
         def sa(no_v, adjacency_matrix, tabu_lst_size, max_no_tournmnt, ngh_strc, term_flag_1, term_flag_2, t_0, alpha):
 
             """
-            no_v: number of vertices
-            adjacency_matrix: adjacency matrix
-            tabu_lst_size: max length of tabu_lst, here in sa it is always zero
-            tabu_tenure: The duration the solution kept on the tabu list, here in sa it will not be used
-            max_no_tournmnt: candidates picked in tournament selection
-            nght_stc: neighborhood structure (swap or 2-opt)
-            term_flag_1: termination flag (inner loop)
-            term_flag_2: termination flag (outer loop)
-            t_0: initial temperature
-            alpha: reduction factor for cooling
+            no_v:                 number of vertices
+            adjacency_matrix:     adjacency matrix
+            tabu_lst_size:        number of tabu solutions in tabu_lst, here  it is always zero
+            max_no_tournmnt:      number of candidates picked in tournament selection (neighbors to evalute)
+            nght_stc:             neighborhood structure (swap or 2-opt)
+            term_flag_1:          termination flag (inner loop)
+            term_flag_2:          termination flag (outer loop)
+            t_0:                  initial temperature
+            alpha:                reduction factor for cooling
             """
 
             # initialization
@@ -45,9 +45,8 @@ class SA:
                 while True:
                     last_sol = sol
                     last_cost = cost
-
-                    #get a neighboring solution
-                    sol, cost, tabu_lst = TSP.tnm_selection(no_v, adjacency_matrix, sol,
+                    #get a neighboring solution and its cost (ignore the tabu list since its length is zero)
+                    sol, cost, tabu_lst = TSP.tournament_selection(no_v, adjacency_matrix, sol,
                                                     max_no_tournmnt, ngh_strc, tabu_lst_size,
                                                     tabu_lst, best_cost)
 
@@ -70,7 +69,7 @@ class SA:
                     result['sol'].append(sol)
                     result['best_sol'].append(best_sol)
 
-                    if count_inner > term_flag_1:
+                    if count_inner > term_flag_1: #termination criteria of inner loop (equilbrium state)
                         break
                     # end of inner loop
 
@@ -86,8 +85,8 @@ class SA:
                     count_outer += 1
 
                 # check number of iteration
-                if count_outer > term_flag_2:
+                if count_outer > term_flag_2: #termination criteria 
                    break
 
-                
+                # return the best solution found so far    
                 return best_sol, best_cost, result
