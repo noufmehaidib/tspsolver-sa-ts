@@ -116,7 +116,7 @@ class MAIN:
         result['min_time'] = np.min(result['time'])
             
         # print results
-        print('Search using ' + algorithm_name + 'and' + operator_name)
+        print('Search using ' + algorithm_name + ' and ' + operator_name)
         print('best_sol',result['best_sol'])
         print('best_cost',result['best_cost'])
         #print('best_gap',result['best_gap'])
