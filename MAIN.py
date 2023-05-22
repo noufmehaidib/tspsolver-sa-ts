@@ -55,7 +55,7 @@ class MAIN:
         # if the chosen algorithm is SA,the initial temperature (t_0) and the reduction factor (alpha) are randomly generated
         # print t_0 and alpha to be used later on to compare the results:
         if algorithm == '1':
-            t_0=random.randint(1000,5000)
+            t_0=1000
             alpha=random.random()
             print("The initial temperature is: ",t_0)
             print("The reduction factor is:", alpha)
