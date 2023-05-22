@@ -15,7 +15,7 @@ class MAIN:
         # welcome message
         print("####WELCOME TO TSP SOLVER####")
 
-        # load tsp_38 file 
+        # load dj38 file 
         # file_distance = [[float(x) for x in s.split()[1:]] for s in open('data/dj38.txt').readlines()]
         # no_v = len(file_distance)
 
